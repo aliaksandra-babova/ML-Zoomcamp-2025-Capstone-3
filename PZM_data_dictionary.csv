@@ -1,0 +1,30 @@
+Spreadsheet tab,Element name,Description,Data type
+PZM_yields,location,"Location by state: IL = Illinois, MI = Michigan, MN = Minnesota, PA = Pennsylvania",Factor
+PZM_yields,yr,Year of data collection,Integer
+PZM_yields,crop,Crop grown: m = maize; sb = soybean,Factor
+PZM_yields,plot,Plot number,Integer
+PZM_yields,block,Block number,Integer
+PZM_yields,tillage,Tillage treatment: rt = ridge tillage; cp = chisel plow,Factor
+PZM_yields,cover.trt,Cover crop treatment: rye = winter cereal rye; none = no cover crop (winter fallow),Factor
+PZM_yields,yield,Annual crop yields (kg/ha). Maize yields expressed at 15.5% moisture; soybean yields at 13%,Numeric
+PZM_stable_soil,location,"Location by state: IL = Illinois, MI = Michigan, MN = Minnesota, PA = Pennsylvania",Factor
+PZM_stable_soil,tillage,Tillage treatment: rt = ridge tillage; cp = chisel plow,Factor
+PZM_stable_soil,cover.trt,Cover crop treatment: rye = winter cereal rye; none = no cover crop (winter fallow),Factor
+PZM_stable_soil,depth,0-10 cm depth,Factor
+PZM_stable_soil,crop,Crop grown,Factor
+PZM_stable_soil,yield,Annual crop yields (kg/ha) by treatment at each site averaged over 2012-2015. Maize yields expressed at 15.5% moisture; soybean yields at 13%,Numeric
+PZM_stable_soil,CV,Coefficient of variation (temporal yield variability). Mean yields (as described above) divided by the standard deviation.,Numeric
+PZM_stable_soil,MYP,Minimum yield potential (see Methods in associated publication for more details).,Numeric
+PZM_stable_soil,om_2015,Soil organic matter (SOM) in 2015 (g/kg),Numeric
+PZM_stable_soil,cec_2015,Soil cation exchange capacity (CEC) in 2015 (meq/100 g),Numeric
+PZM_stable_soil,ph_2015,Soil pH in 2015,Numeric
+PZM_stable_soil,Phosphorus_2015,Soil P in 2015 (ppm),Numeric
+PZM_stable_soil,Potassium_2015,Soil K in 2015 (ppm),Numeric
+PZM_stable_soil,Calcium_2015,Soil Ca in 2015 (ppm),Numeric
+PZM_stable_soil,Magnesium_2015,Soil Mg in 2015 (ppm),Numeric
+PZM_stable_soil,d_om,Delta SOM (value of SOM in 2015 - value of SOM in 2011),Numeric
+PZM_stable_soil,d_cec,Delta CEC,Numeric
+PZM_stable_soil,d_ph,Delta pH,Numeric
+PZM_stable_soil,d_P,Delta P,Numeric
+PZM_stable_soil,mean.vmc,"Mean daily volumetric soil moisture (10 cm depth) from the corn V6 to VT growth stage, averaged across the 2012-2015 growing seasons.",Numeric
+PZM_stable_soil,meanT,"Mean daily soil temperature (10 cm depth) from the corn V6 to VT growth stage, averaged across the 2012-2015 growing seasons.",Numeric
