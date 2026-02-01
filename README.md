@@ -10,7 +10,7 @@ The objective of this project is to build a classification model that predicts c
 
 ## Dataset description
 This dataset provides a detailed collection of soil nutrient compositions, environmental conditions, and recommended crops. \
-The dataset: https://www.kaggle.com/datasets/aniketkumaraugustya/soil-type-dataset \ 
+The dataset: https://www.kaggle.com/datasets/aniketkumaraugustya/soil-type-dataset 
 
 # Data Preparation & EDA
 ## Target Distribution
@@ -25,7 +25,7 @@ The dataset has 3400 records, but only 1200 are labeled with Plant_Health_Status
 
 ## Correlation
 
-Nitrogen_level and Soil_moisture showed the highest negative feature correlation (27% and 77%), which makes agronomical sense, as when moisture and nitrogen levels go down, the stess increases. 
+`Nitrogen_level` and `Soil_moisture` showed the highest negative feature correlation (**27%** and **77%**), which makes agronomical sense, as when moisture and nitrogen levels go down, the stess increases. 
 
 # Model Selection & Training
 ## Basic Decision Tree Classifier 
@@ -57,7 +57,9 @@ Random Forest Classifier reached `accuracy 0.9958 on validation dataset` out-of-
 ## Final Validation on full dataset
 The Decision Tree actually **outperformed** the Random Forest on the test set (0.9958 vs 0.9917). The Random Forest might  be too complex for this specific synthetic data, while a simple Tree captured the "rules" perfectly.\
 \
-**Conclusion**: **Decision Tree** is a better choice, because it is simpler and more interpretable.
+**Conclusion**: **Decision Tree** is a better choice, because it is simpler and more interpretable.\
+\
+**NOTE**: During hyperparameter tuning, multiple configurations (depths 4-6) yielded identical accuracy. While the final model uses `max_depth=5`, a depth of 4 with a higher `min_samples_leaf` (e.g., 15) would likely provide even better generalization and interpretability, as it prevents the model from creating branches for very specific, potentially noisy data points.
 
 # Testing the predictions
 ## Running locally
@@ -98,7 +100,82 @@ curl -X 'POST' 'http://localhost:9696/predict'
 ```
 uv run python request.py
 ```
+## Running Docker
+1. Switch directory:
+```
+cd ML-Zoomcamp-2025-Capstone-3
+```
+2. Build the docker image:
+```
+docker build -t plant-stress-prediction .
+```
+3. Run it:
+```
+docker run -it --rm -p 9696:9696 plant-stress-prediction
+```
+4. Send a request via the api docs (http://localhost:9696/docs) or with this curl: 
+```
+curl -X 'POST' 'http://localhost:9696/predict' 
+   -H 'accept: application/json' 
+   -H 'Content-Type: application/json' 
+   -d '{
+    "soil_type": "slightly acidic",
+    "humidity": 40,
+    "phosphorus_level": 12,
+    "soil_moisture": 14,
+    "nitrogen_level": 45
+   }'
+```
+5. You can also run the service.py script:
+```
+python request.py
+```
+# Serverless deployment
 
+The final model is containerized using Docker and deployed as a serverless function on AWS Lambda.
+
+## Local Deployment (Docker)
+
+1. Switch directory:
+```
+cd serverless
+```
+2. Build the docker image:
+```
+docker build -t plant-stress-prediction .
+```
+3. Run it:
+```
+docker run -it --rm -p 8080:8080 plant-stress-prediction
+```
+4. Test the local endpoint: In a new terminal, run the following curl command:
+```
+curl -X 'POST' "http://localhost:8080/2015-03-31/functions/function/invocations" \
+-d '{"soil_type": "slightly acidic", "humidity": 40, "phosphorus_level": 12.7, "soil_moisture": 14.4, "nitrogen_level": 45.5}'
+```
+## Remote Deployment (AWS Lambda)
+The model is hosted on AWS. You can test the live endpoint using the following Python script:
+1. Switch directory:
+```
+cd serverless
+```
+2. Run the invoke.py script:
+```
+python invoke.py
+```
+**NOTE**: the script requires boto3, if missing, install with:
+```
+pip install boto3
+```
+
+# Technical Challenges & Lessons Learned
+During development, several key challenges were addressed:
+
+* **Model Selection**: Initial Logistic Regression yielded a baseline accuracy of 76%. Transitioning to a Decision Tree allowed the model to capture non-linear sensor relationships, increasing accuracy to 99.5%.
+
+* **Feature Optimization**: By analyzing feature importance, it was determined that `soil_moisture` and `nitrogen_level` were the primary drivers. This allowed the substitution of soil_pH with the more accessible soil_type feature without compromising performance.
+
+* **Production Debugging**: Encountered and resolved a nested JSON structure issue during Lambda deployment where the DictVectorizer required a flat dictionary input. 
 
 # Future Work:
 
