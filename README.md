@@ -1,4 +1,4 @@
-# ML-Zoomcamp-2025-Capst    one-3
+# ML-Zoomcamp-2025-Capstone-3
 ## Overview
 This project focuses on giving value to a farmer by predicting crop stress level based on soil nutrient composition and environmental conditions.
 
@@ -10,7 +10,7 @@ The objective of this project is to build a classification model that predicts c
 
 ## Dataset description
 This dataset provides a detailed collection of soil nutrient compositions, environmental conditions, and recommended crops. \
-The dataset: [https://catalog.data.gov/dataset/a-regionally-adapted-implementation-of-conservation-agriculture-delivers-rapid-improvement-79c19](https://www.kaggle.com/datasets/aniketkumaraugustya/soil-type-dataset) \ 
+The dataset: https://www.kaggle.com/datasets/aniketkumaraugustya/soil-type-dataset \ 
 
 # Data Preparation & EDA
 ## Target Distribution
@@ -58,6 +58,47 @@ Random Forest Classifier reached `accuracy 0.9958 on validation dataset` out-of-
 The Decision Tree actually **outperformed** the Random Forest on the test set (0.9958 vs 0.9917). The Random Forest might  be too complex for this specific synthetic data, while a simple Tree captured the "rules" perfectly.\
 \
 **Conclusion**: **Decision Tree** is a better choice, because it is simpler and more interpretable.
+
+# Testing the predictions
+## Running locally
+1. Clone the repo:
+```
+git clone https://github.com/aliaksandra-babova/ML-Zoomcamp-2025-Capstone-3
+```
+2. Install uv:
+```
+pip install uv
+```
+3. Switch directory:
+```
+cd ML-Zoomcamp-2025-Capstone-3
+```
+4. Install the project's dependencies:
+```
+uv sync
+```
+5. Run the app with uvicorn inside the virtual environment: 
+```
+uv run uvicorn predict:app --host 0.0.0.0 --port 9696 --reload
+```
+6. Send a request via the api docs (http://localhost:9696/docs) or with this curl:
+```
+curl -X 'POST' 'http://localhost:9696/predict' 
+   -H 'accept: application/json' 
+   -H 'Content-Type: application/json' 
+   -d '{
+    "soil_type": "slightly acidic",
+    "humidity": 40,
+    "phosphorus_level": 12,
+    "soil_moisture": 14,
+    "nitrogen_level": 45
+   }'
+```
+7. You can also run the service.py script:
+```
+uv run python request.py
+```
+
 
 # Future Work:
 
