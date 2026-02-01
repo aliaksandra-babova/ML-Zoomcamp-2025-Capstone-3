@@ -12,27 +12,19 @@ from pydantic import ConfigDict
 #request
 
 class Sample(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     soil_type: Literal["slightly acidic", "neutral", "alkaline", "acidic"]
-    humidity: float = Field(..., ge=0.0, le=40.0)
-    phosphorus_level: float = Field(..., ge=0.0, le=40.0)
-    soil_moisture: float = Field(..., ge=0.0, le=40.0)
-    nitrogen_level: float = Field(..., ge=0.0, le=40.0)
+    humidity: float = Field(..., ge=0.0, le=100.0)
+    phosphorus_level: float = Field(..., ge=0.0)
+    soil_moisture: float = Field(..., ge=0.0, le=100.0)
+    nitrogen_level: float = Field(..., ge=0.0)
 
 #response
 
 class PredictResponse(BaseModel):
-    y_pred: float
-    result_status: str
+    prediction_id: int
+    plant_health_status: str
     model_version: str
-
-class Sample(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    soil_type: Literal["slightly acidic", "neutral", "alkaline", "acidic"]
-    humidity: float = Field(..., ge=0.0, le=100.0)
-    phosphorus_level: float = Field(..., ge=0.0, le=100.0)
-    soil_moisture: float = Field(..., ge=0.0, le=100.0)
-    nitrogen_level: float = Field(..., ge=0.0, le=100.0)    
 
 
 app = FastAPI(title="plant-stress-prediction")
