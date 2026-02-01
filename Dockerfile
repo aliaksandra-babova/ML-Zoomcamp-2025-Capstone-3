@@ -2,7 +2,7 @@ FROM python:3.12.1-slim-bookworm
 
 # RUN pip install uv
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
 
 WORKDIR /app
 
