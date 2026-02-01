@@ -1,4 +1,4 @@
-# ML-Zoomcamp-2025-Capstone-3
+# ML-Zoomcamp-2025-Capst    one-3
 ## Overview
 This project focuses on giving value to a farmer by predicting crop stress level based on soil nutrient composition and environmental conditions.
 
