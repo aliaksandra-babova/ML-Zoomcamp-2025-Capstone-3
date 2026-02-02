@@ -21,7 +21,7 @@ Distribution: `42%, 33% , 25%`
 
 ## Missing Values
 
-The dataset has 3400 records, but only 1200 are labeled with Plant_Health_Status, therefore I decided to drop the extra records and further clean up columns that didn't bring any value to the current project objectives. 
+The dataset has 3400 records, but only 1200 are labeled with `Plant_Health_Status`, therefore I decided to drop the extra records and further clean up columns that didn't bring any value to the current project objectives. 
 
 ## Correlation
 
@@ -85,16 +85,7 @@ uv run uvicorn predict:app --host 0.0.0.0 --port 9696 --reload
 ```
 6. Send a request via the api docs (http://localhost:9696/docs) or with this curl:
 ```
-curl -X 'POST' 'http://localhost:9696/predict' 
-   -H 'accept: application/json' 
-   -H 'Content-Type: application/json' 
-   -d '{
-    "soil_type": "slightly acidic",
-    "humidity": 40,
-    "phosphorus_level": 12,
-    "soil_moisture": 14,
-    "nitrogen_level": 45
-   }'
+curl -X 'POST' 'http://localhost:9696/predict' -H 'Content-Type: application/json' -d '{"soil_type": "slightly acidic", "humidity": 40, "phosphorus_level": 12, "soil_moisture": 14, "nitrogen_level": 45}'
 ```
 7. You can also run the service.py script:
 ```
@@ -115,16 +106,7 @@ docker run -it --rm -p 9696:9696 plant-stress-prediction
 ```
 4. Send a request via the api docs (http://localhost:9696/docs) or with this curl: 
 ```
-curl -X 'POST' 'http://localhost:9696/predict' 
-   -H 'accept: application/json' 
-   -H 'Content-Type: application/json' 
-   -d '{
-    "soil_type": "slightly acidic",
-    "humidity": 40,
-    "phosphorus_level": 12,
-    "soil_moisture": 14,
-    "nitrogen_level": 45
-   }'
+curl -X 'POST' 'http://localhost:9696/predict' -H 'Content-Type: application/json' -d '{"soil_type": "slightly acidic", "humidity": 40, "phosphorus_level": 12, "soil_moisture": 14, "nitrogen_level": 45}'
 ```
 5. You can also run the service.py script:
 ```
@@ -144,7 +126,7 @@ cd serverless
 ```
 docker build -t plant-stress-prediction .
 ```
-3. Run it:
+3. Run it (it can take some time):
 ```
 docker run -it --rm -p 8080:8080 plant-stress-prediction
 ```
@@ -163,19 +145,36 @@ cd serverless
 ```
 python invoke.py
 ```
-**NOTE**: the script requires boto3, if missing, install with:
+**NOTES**: 
+1. The script requires boto3, if missing, install with:
 ```
 pip install boto3
 ```
+2. To test the remote Lambda function, please provide your own AWS credentials. In the terminal, run the following before executing the test script:
+```
+export AWS_ACCESS_KEY_ID="aws_access_key"
+export AWS_SECRET_ACCESS_KEY="aws_secret_key"
+export AWS_DEFAULT_REGION="eu-north-1"
+```
+
+# Reproducibility & Environment Management
+To ensure the results are 100% reproducible across different environments, this project utilizes modern dependency and environment management tools:
+
+* **Environment Isolation**: Developed using `uv` to ensure strict version pinning of the libraries.
+
+* **Cross-Platform Consistency**: The project was verified in a clean **GitHub Codespaces** environment to simulate a "first-time user" experience.
+
+* **Cloud-Ready Infrastructure**: The deployment is fully containerized, allowing the model to transition from a local FastAPI server to an AWS Lambda function without modification to the core logic.
 
 # Technical Challenges & Lessons Learned
 During development, several key challenges were addressed:
 
-* **Model Selection**: Initial Logistic Regression yielded a baseline accuracy of 76%. Transitioning to a Decision Tree allowed the model to capture non-linear sensor relationships, increasing accuracy to 99.5%.
+* **Model Selection**: Initial **Logistic Regression** yielded a baseline accuracy of 76%. Transitioning to a **Decision Tree** allowed the model to capture non-linear sensor relationships, increasing accuracy to **99.5%**.
 
-* **Feature Optimization**: By analyzing feature importance, it was determined that `soil_moisture` and `nitrogen_level` were the primary drivers. This allowed the substitution of soil_pH with the more accessible soil_type feature without compromising performance.
+* **Feature Optimization**: By analyzing feature importance, it was determined that `soil_moisture` and `nitrogen_level` were the primary drivers. This allowed the substitution of `soil_pH` with the more accessible `soil_type` feature without compromising performance.
 
-* **Production Debugging**: Encountered and resolved a nested JSON structure issue during Lambda deployment where the DictVectorizer required a flat dictionary input. 
+* **Production Debugging**: Encountered and resolved a nested JSON structure issue during `Lambda` deployment where the `DictVectorizer` required a flat dictionary input.
+* **Configuration Portability**: Resolved `NoRegionError` and credential handling in `boto3` by transitioning from local file-based configs to environment variables (`AWS_DEFAULT_REGION`), ensuring the `invoke.py` script works for any reviewer with valid credentials.
 
 # Future Work:
 
